@@ -3,8 +3,7 @@ package ru.khomyakov.services;
 import ru.khomyakov.domain.ClientAccount;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class InOutService {
 
@@ -26,11 +25,15 @@ public class InOutService {
 
     public static void saveClientsToFile(Map<String, ClientAccount> clients, String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
-            for (ClientAccount client : clients.values()) {
-                writer.write(client.toString());
+            List<String> accountList = new ArrayList<>(clients.keySet());
+            accountList.sort(Comparator.naturalOrder());
+
+            for (String client : accountList) {
+                writer.write(clients.get(client).toString());
                 writer.append('\n');
                 writer.flush();
             }
+
         }
     }
 }

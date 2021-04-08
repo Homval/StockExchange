@@ -14,9 +14,9 @@ import java.util.Map;
  *
  */
 public class App {
-    private static final String CLIENTS_FILE_PATH = "";
-    private static final String ORDERS_FILE_PATH = "";
-    private static final String PRINT_FILE_PATH = "";
+    private static final String CLIENTS_FILE_PATH = "C:\\Users\\in00\\IdeaProjects\\StockExchange\\src\\resources\\clients.txt";
+    private static final String ORDERS_FILE_PATH = "C:\\Users\\in00\\IdeaProjects\\StockExchange\\src\\resources\\orders.txt";
+    private static final String PRINT_FILE_PATH = "C:\\Users\\in00\\IdeaProjects\\StockExchange\\src\\resources\\results.txt";
 
     public static Map<String, ClientAccount> clients;
 
