@@ -1,20 +1,21 @@
 package ru.khomyakov.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 public class ClientAccount {
     private final String clientName;
     private int dollarAccount;
-    private int shareA;
-    private int shareB;
-    private int shareC;
-    private int shareD;
+    private final Map<StockNames, Integer> shareAmount = new HashMap<>();
 
     public ClientAccount(String clientName, int dollarAccount, int shareA, int shareB, int shareC, int shareD) {
         this.clientName = clientName;
         this.dollarAccount = dollarAccount;
-        this.shareA = shareA;
-        this.shareB = shareB;
-        this.shareC = shareC;
-        this.shareD = shareD;
+        shareAmount.put(StockNames.A, shareA);
+        shareAmount.put(StockNames.B, shareB);
+        shareAmount.put(StockNames.C, shareC);
+        shareAmount.put(StockNames.D, shareD);
     }
 
     public String getClientName() {
@@ -29,35 +30,32 @@ public class ClientAccount {
         this.dollarAccount = dollarAccount;
     }
 
-    public int getShareA() {
-        return shareA;
+    public Map<StockNames, Integer> getShareAmount() {
+        return shareAmount;
     }
 
-    public void setShareA(int shareA) {
-        this.shareA = shareA;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientAccount that = (ClientAccount) o;
+        return clientName.equals(that.clientName);
     }
 
-    public int getShareB() {
-        return shareB;
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientName);
     }
 
-    public void setShareB(int shareB) {
-        this.shareB = shareB;
-    }
+    @Override
+    public String toString() {
 
-    public int getShareC() {
-        return shareC;
-    }
+        return getClientName() + "\t" +
+                getDollarAccount() + "\t" +
+                shareAmount.get(StockNames.A) + "\t" +
+                shareAmount.get(StockNames.B) + "\t" +
+                shareAmount.get(StockNames.C) + "\t" +
+                shareAmount.get(StockNames.D) + "\t";
 
-    public void setShareC(int shareC) {
-        this.shareC = shareC;
-    }
-
-    public int getShareD() {
-        return shareD;
-    }
-
-    public void setShareD(int shareD) {
-        this.shareD = shareD;
     }
 }
