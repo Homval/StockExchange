@@ -1,7 +1,5 @@
 package ru.khomyakov.services;
 
-import ru.khomyakov.App;
-import ru.khomyakov.domain.ClientAccount;
 import ru.khomyakov.domain.StockNames;
 import ru.khomyakov.domain.StockRequest;
 
@@ -22,7 +20,7 @@ public class OrderRequestsService {
         String request;
         while ((request = reader.readLine()) != null) {
             String[] requestParts = request.split("\t");
-            StockRequest stockRequest = new StockRequest(App.clients.get(requestParts[0]),
+            StockRequest stockRequest = new StockRequest(requestParts[0],
                                                         requestParts[1],
                                                         StockNames.valueOf(requestParts[2]),
                                                         Integer.parseInt(requestParts[3]),
@@ -42,10 +40,13 @@ public class OrderRequestsService {
 //        If request not exist yet add it in appropriate list. In other case make transaction
     private static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest) {
         if (isSuchRequest(stockRequest, otherTypeRequests)) {
-            ClientAccount clientAccount = otherTypeRequests.stream().filter(req -> req.equals(stockRequest)).map(StockRequest::getClient).findAny().orElse(null);
-            assert clientAccount != null;
-            TransactionService.executeTransaction(stockRequest.getClient(), clientAccount, stockRequest);
-            otherTypeRequests.remove(stockRequest);
+            String clientName = otherTypeRequests.stream().filter(req -> req.equals(stockRequest)).map(StockRequest::getClientName).findFirst().orElse(null);
+            if (clientName != null && !clientName.equals(stockRequest.getClientName())) {
+                TransactionService.executeTransaction(stockRequest.getClientName(), clientName, stockRequest);
+                otherTypeRequests.remove(stockRequest);
+            } else if (clientName != null) {
+                sameTypeRequests.add(stockRequest);
+            }
         } else {
             sameTypeRequests.add(stockRequest);
         }

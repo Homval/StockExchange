@@ -3,22 +3,22 @@ package ru.khomyakov.domain;
 import java.util.Objects;
 
 public class StockRequest {
-    private final ClientAccount client;
+    private final String clientName;
     private final String stockAction;
     private final StockNames stockName;
     private final int stockPrice;
     private final int stockAmount;
 
-    public StockRequest(ClientAccount client, String stockAction, StockNames stockName, int stockPrice, int stockAmount) {
-        this.client = client;
+    public StockRequest(String clientName, String stockAction, StockNames stockName, int stockPrice, int stockAmount) {
+        this.clientName = clientName;
         this.stockAction = stockAction;
         this.stockName = stockName;
         this.stockPrice = stockPrice;
         this.stockAmount = stockAmount;
     }
 
-    public ClientAccount getClient() {
-        return client;
+    public String getClientName() {
+        return clientName;
     }
 
     public StockNames getStockName() {

@@ -7,7 +7,9 @@ import ru.khomyakov.domain.StockRequest;
 public class TransactionService {
 
 //  executing transaction between seller and buyer
-    public static void executeTransaction(ClientAccount seller, ClientAccount buyer, StockRequest request) {
+    public static void executeTransaction(String sellerName, String buyerName, StockRequest request) {
+        ClientAccount seller = App.clients.get(sellerName);
+        ClientAccount buyer =App.clients.get(buyerName);
         seller.setDollarAccount(seller.getDollarAccount() + request.getStockPrice() * request.getStockAmount());
         seller.getShareAmount().compute(request.getStockName(), (k, v) -> v == null? request.getStockAmount() :  v - request.getStockAmount());
         buyer.setDollarAccount(buyer.getDollarAccount() - request.getStockPrice() * request.getStockAmount());
