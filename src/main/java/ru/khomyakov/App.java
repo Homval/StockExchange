@@ -21,7 +21,7 @@ public class App {
     public static void main( String[] args ) throws IOException{
 
         Properties properties = new Properties();
-        FileReader reader = new FileReader("C:\\Users\\in00\\IdeaProjects\\StockExchange\\src\\resources\\app.properties");
+        FileReader reader = new FileReader("src/resources/app.properties");
         properties.load(reader);
         reader.close();
 

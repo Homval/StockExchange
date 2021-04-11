@@ -116,6 +116,25 @@ public class OrderRequestServiceTest {
     }
 
     @Test
+    public void check_execute_incorrect_request_for_buy() {
+        StockRequest buyerRequest = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
+        StockRequest sellerRequest = new StockRequest("A", "s", StockNames.valueOf("A"), 10, 10);
+        List<StockRequest> buyersList = new LinkedList<>();
+        List<StockRequest> sellersList = new LinkedList<>();
+        sellersList.add(sellerRequest);
+        Map<String, ClientAccount> clients = new HashMap<>();
+        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
+        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
+        clients.put(seller.getClientName(), seller);
+        clients.put(buyer.getClientName(), buyer);
+
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+
+        assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
+
+    }
+
+    @Test
     public void check_add_in_list_correct_request_with_different_price() {
         StockRequest buyerRequest = new StockRequest("A", "b", StockNames.valueOf("A"), 15, 10);
         StockRequest sellerRequest = new StockRequest("B", "s", StockNames.valueOf("A"), 10, 10);
