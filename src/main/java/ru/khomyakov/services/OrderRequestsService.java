@@ -45,26 +45,36 @@ public class OrderRequestsService {
                     break;
             }
         }
+
+        System.out.println(sellersRequests.size() + " " + buyersRequests.size());
     }
 
 //        If request not exist yet add it in appropriate list. In other case make transaction
     public static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest, Map<String, ClientAccount> clients) {
-        if (isSuchRequest(stockRequest, otherTypeRequests)) {
-            String clientName = otherTypeRequests.stream().filter(req -> req.equals(stockRequest)).map(StockRequest::getClientName).findFirst().orElse(null);
-            if (clientName != null && !clientName.equals(stockRequest.getClientName())) {
+        if (isRequestAvailableForExecute(stockRequest, otherTypeRequests)) {
+            String clientName = otherTypeRequests.stream()
+                                                .filter(req -> req.equals(stockRequest) && !req.getClientName().equals(stockRequest.getClientName()))
+                                                .map(StockRequest::getClientName)
+                                                .findFirst().orElse(null);
+            if (stockRequest.getStockAction().equals("s")) {
                 TransactionService.executeTransaction(stockRequest.getClientName(), clientName, stockRequest, clients);
-                otherTypeRequests.remove(stockRequest);
-            } else if (clientName != null) {
-                sameTypeRequests.add(stockRequest);
+            } else {
+                TransactionService.executeTransaction(clientName, stockRequest.getClientName(), stockRequest, clients);
             }
+            otherTypeRequests.remove(stockRequest);
+
         } else {
             sameTypeRequests.add(stockRequest);
         }
     }
 
 //         Check request on existing equal purpose.
-    public static boolean isSuchRequest(StockRequest request, List<StockRequest> requests) {
-        return requests.contains(request);
+    public static boolean isRequestAvailableForExecute(StockRequest request, List<StockRequest> requests) {
+        for (StockRequest request1 : requests) {
+            if (request1.equals(request) && !request1.getClientName().equals(request.getClientName()))
+                return true;
+        }
+        return false;
     }
 
 //    Check the entered parameters of request

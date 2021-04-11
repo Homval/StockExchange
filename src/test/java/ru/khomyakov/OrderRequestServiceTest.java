@@ -58,12 +58,22 @@ public class OrderRequestServiceTest {
     }
 
     @Test
-    public void check_is_request_in_list_if_true() {
+    public void check_is_request_in_list_if_false() {
         StockRequest request = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
         List<StockRequest> list = new LinkedList<>();
         list.add(request);
 
-        assertTrue(OrderRequestsService.isSuchRequest(request, list));
+        assertFalse(OrderRequestsService.isRequestAvailableForExecute(request, list));
+    }
+
+    @Test
+    public void check_is_request_in_list_if_true() {
+        StockRequest request = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
+        StockRequest request1 = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
+        List<StockRequest> list = new LinkedList<>();
+        list.add(request);
+
+        assertTrue(OrderRequestsService.isRequestAvailableForExecute(request1, list));
     }
 
     @Test
@@ -73,7 +83,7 @@ public class OrderRequestServiceTest {
         List<StockRequest> list = new LinkedList<>();
         list.add(request2);
 
-        assertFalse(OrderRequestsService.isSuchRequest(request, list));
+        assertFalse(OrderRequestsService.isRequestAvailableForExecute(request, list));
     }
 
     @Test
@@ -83,7 +93,7 @@ public class OrderRequestServiceTest {
         List<StockRequest> list = new LinkedList<>();
         list.add(request2);
 
-        assertFalse(OrderRequestsService.isSuchRequest(request, list));
+        assertFalse(OrderRequestsService.isRequestAvailableForExecute(request, list));
     }
 
     @Test
@@ -93,7 +103,7 @@ public class OrderRequestServiceTest {
         List<StockRequest> list = new LinkedList<>();
         list.add(request2);
 
-        assertFalse(OrderRequestsService.isSuchRequest(request, list));
+        assertFalse(OrderRequestsService.isRequestAvailableForExecute(request, list));
     }
 
     @Test
@@ -129,6 +139,26 @@ public class OrderRequestServiceTest {
         clients.put(buyer.getClientName(), buyer);
 
         OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+
+        assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
+
+    }
+
+    @Test
+    public void check_execute_incorrect_request_for_sell() {
+        StockRequest buyerRequest = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
+        StockRequest sellerRequest = new StockRequest("A", "s", StockNames.valueOf("A"), 10, 10);
+        List<StockRequest> buyersList = new LinkedList<>();
+        List<StockRequest> sellersList = new LinkedList<>();
+        buyersList.add(buyerRequest);
+        Map<String, ClientAccount> clients = new HashMap<>();
+        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
+        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
+        clients.put(seller.getClientName(), seller);
+        clients.put(buyer.getClientName(), buyer);
+
+        OrderRequestsService.addToListOrExecuteRequest(sellersList, buyersList, sellerRequest, clients);
+
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 

@@ -12,7 +12,7 @@ public class TransactionService {
         ClientAccount seller = clients.get(sellerName);
         ClientAccount buyer = clients.get(buyerName);
         seller.setDollarAccount(seller.getDollarAccount() + request.getStockPrice() * request.getStockAmount());
-        seller.getShareAmount().compute(request.getStockName(), (k, v) -> v == null? request.getStockAmount() :  v - request.getStockAmount());
+        seller.getShareAmount().compute(request.getStockName(), (k, v) -> v == null? -1 * request.getStockAmount() :  v - request.getStockAmount());
         buyer.setDollarAccount(buyer.getDollarAccount() - request.getStockPrice() * request.getStockAmount());
         buyer.getShareAmount().compute(request.getStockName(), (k, v) -> v == null? request.getStockAmount() :  v + request.getStockAmount());
         clients.put(seller.getClientName(), seller);

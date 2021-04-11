@@ -21,10 +21,10 @@ public class TransactionServiceTest {
     public void init() {
         sellerName = "A";
         buyerName = "B";
-        request = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
+        request = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
         clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("A", 100, 100, 100, 100, 100);
+        ClientAccount buyer = new ClientAccount("B", 0, 0, 0, 0, 0);
+        ClientAccount seller = new ClientAccount("A", 0, 0, 0, 0, 0);
         clients.put(sellerName, seller);
         clients.put(buyerName, buyer);
     }
@@ -35,7 +35,7 @@ public class TransactionServiceTest {
 
         ClientAccount account1 = clients.get(sellerName);
 
-        ClientAccount sellerResult = new ClientAccount("A", 200, 90, 100, 100, 100);
+        ClientAccount sellerResult = new ClientAccount("A", 100, -10, 0, 0, 0);
 
         assertEquals(account1, sellerResult);
     }
@@ -46,7 +46,7 @@ public class TransactionServiceTest {
 
         ClientAccount account2 = clients.get(buyerName);
 
-        ClientAccount buyerResult = new ClientAccount("A", 900, 1010, 1000, 1000, 1000);
+        ClientAccount buyerResult = new ClientAccount("B", -100, 10, 0, 0, 0);
 
         assertEquals(account2, buyerResult);
     }
