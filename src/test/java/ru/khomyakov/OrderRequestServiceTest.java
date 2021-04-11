@@ -220,4 +220,18 @@ public class OrderRequestServiceTest {
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 
     }
+
+    @Test
+    public void remove_executed_request() {
+        StockRequest buyerRequest1 = new StockRequest("A", "b", StockNames.valueOf("A"), 10, 10);
+        StockRequest buyerRequest = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
+        List<StockRequest> buyersList = new LinkedList<>();
+        buyersList.add(buyerRequest);
+        buyersList.add(buyerRequest1);
+
+        OrderRequestsService.remove(buyersList, buyerRequest1);
+
+        assertEquals(1, buyersList.size());
+
+    }
 }

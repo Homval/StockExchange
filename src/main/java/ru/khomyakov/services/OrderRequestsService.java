@@ -9,6 +9,7 @@ import ru.khomyakov.exceptions.WrongStockRequestException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class OrderRequestsService {
 //        Create lists for buyers and sellers requests
         List<StockRequest> sellersRequests = new LinkedList<>();
         List<StockRequest> buyersRequests = new LinkedList<>();
+
 
         BufferedReader reader = new BufferedReader(new FileReader(ordersFilePath));
         String request;
@@ -44,24 +46,21 @@ public class OrderRequestsService {
                     addToListOrExecuteRequest(sellersRequests, buyersRequests, stockRequest, App.clients);
                     break;
             }
-        }
-
-        System.out.println(sellersRequests.size() + " " + buyersRequests.size());
-    }
+        }    }
 
 //        If request not exist yet add it in appropriate list. In other case make transaction
     public static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest, Map<String, ClientAccount> clients) {
         if (isRequestAvailableForExecute(stockRequest, otherTypeRequests)) {
-            String clientName = otherTypeRequests.stream()
+            StockRequest earlierRequest = otherTypeRequests.stream()
                                                 .filter(req -> req.equals(stockRequest) && !req.getClientName().equals(stockRequest.getClientName()))
-                                                .map(StockRequest::getClientName)
                                                 .findFirst().orElse(null);
+            String clientName = earlierRequest.getClientName();
             if (stockRequest.getStockAction().equals("s")) {
                 TransactionService.executeTransaction(stockRequest.getClientName(), clientName, stockRequest, clients);
             } else {
                 TransactionService.executeTransaction(clientName, stockRequest.getClientName(), stockRequest, clients);
             }
-            otherTypeRequests.remove(stockRequest);
+            remove(otherTypeRequests, earlierRequest);
 
         } else {
             sameTypeRequests.add(stockRequest);
@@ -85,6 +84,17 @@ public class OrderRequestsService {
                 || (!param[1].equals("s") && !param[1].equals("b"))
                 || !List.of(StockNames.values()).contains(StockNames.valueOf(param[2]))) {
             throw new WrongStockRequestException();
+        }
+    }
+
+    public static void remove(List<StockRequest> requests, StockRequest request) {
+        Iterator<StockRequest> iterator = requests.iterator();
+        while (iterator.hasNext()) {
+            StockRequest request1 = iterator.next();
+            if (request1.equals(request) && request1.getClientName().equals(request.getClientName())) {
+                iterator.remove();
+                return;
+            }
         }
     }
 }
