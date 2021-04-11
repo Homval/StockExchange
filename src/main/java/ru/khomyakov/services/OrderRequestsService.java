@@ -2,6 +2,8 @@ package ru.khomyakov.services;
 
 import ru.khomyakov.domain.StockNames;
 import ru.khomyakov.domain.StockRequest;
+import ru.khomyakov.exceptions.WrongClientAccountException;
+import ru.khomyakov.exceptions.WrongStockRequestException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,6 +22,14 @@ public class OrderRequestsService {
         String request;
         while ((request = reader.readLine()) != null) {
             String[] requestParts = request.split("\t");
+//            check the entered data for StockRequest
+            try{
+                if (requestParts.length < 5 || requestParts[0] == null || requestParts[0].equals("") || (requestParts[1].equals("s") || requestParts[1].equals("b"))) {
+                    throw new WrongStockRequestException();
+                }
+            } catch (WrongStockRequestException e) {
+                e.printStackTrace();
+            }
             StockRequest stockRequest = new StockRequest(requestParts[0],
                                                         requestParts[1],
                                                         StockNames.valueOf(requestParts[2]),

@@ -1,6 +1,7 @@
 package ru.khomyakov.services;
 
 import ru.khomyakov.domain.ClientAccount;
+import ru.khomyakov.exceptions.WrongClientAccountException;
 
 import java.io.*;
 import java.util.*;
@@ -13,6 +14,14 @@ public class InOutService {
         reader.lines()
                 .forEach(line -> {
                     String[] client = line.split("\t");
+//                    check the entered data for ClientAccount
+                    try{
+                        if (client.length < 5 || client[0] == null || client[0].equals("")) {
+                            throw new WrongClientAccountException();
+                        }
+                    } catch (WrongClientAccountException e) {
+                        e.printStackTrace();
+                    }
                     clientAccountDataBase.put(client[0], new ClientAccount(client[0],
                             Integer.parseInt(client[1]),
                             Integer.parseInt(client[2]),
