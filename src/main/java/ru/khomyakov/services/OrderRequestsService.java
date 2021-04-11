@@ -1,8 +1,9 @@
 package ru.khomyakov.services;
 
+import ru.khomyakov.App;
+import ru.khomyakov.domain.ClientAccount;
 import ru.khomyakov.domain.StockNames;
 import ru.khomyakov.domain.StockRequest;
-import ru.khomyakov.exceptions.WrongClientAccountException;
 import ru.khomyakov.exceptions.WrongStockRequestException;
 
 import java.io.BufferedReader;
@@ -10,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class OrderRequestsService {
 
@@ -24,9 +26,7 @@ public class OrderRequestsService {
             String[] requestParts = request.split("\t");
 //            check the entered data for StockRequest
             try{
-                if (requestParts.length < 5 || requestParts[0] == null || requestParts[0].equals("") || (requestParts[1].equals("s") || requestParts[1].equals("b"))) {
-                    throw new WrongStockRequestException();
-                }
+                areRequestParametersCorrect(requestParts);
             } catch (WrongStockRequestException e) {
                 e.printStackTrace();
             }
@@ -38,21 +38,21 @@ public class OrderRequestsService {
 
             switch (requestParts[1]) {
                 case ("b") :
-                    addToListOrExecuteRequest(buyersRequests, sellersRequests, stockRequest);
+                    addToListOrExecuteRequest(buyersRequests, sellersRequests, stockRequest, App.clients);
                     break;
                 case ("s") :
-                    addToListOrExecuteRequest(sellersRequests, buyersRequests, stockRequest);
+                    addToListOrExecuteRequest(sellersRequests, buyersRequests, stockRequest, App.clients);
                     break;
             }
         }
     }
 
 //        If request not exist yet add it in appropriate list. In other case make transaction
-    private static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest) {
+    public static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest, Map<String, ClientAccount> clients) {
         if (isSuchRequest(stockRequest, otherTypeRequests)) {
             String clientName = otherTypeRequests.stream().filter(req -> req.equals(stockRequest)).map(StockRequest::getClientName).findFirst().orElse(null);
             if (clientName != null && !clientName.equals(stockRequest.getClientName())) {
-                TransactionService.executeTransaction(stockRequest.getClientName(), clientName, stockRequest);
+                TransactionService.executeTransaction(stockRequest.getClientName(), clientName, stockRequest, clients);
                 otherTypeRequests.remove(stockRequest);
             } else if (clientName != null) {
                 sameTypeRequests.add(stockRequest);
@@ -63,7 +63,18 @@ public class OrderRequestsService {
     }
 
 //         Check request on existing equal purpose.
-    private static boolean isSuchRequest(StockRequest request, List<StockRequest> requests) {
+    public static boolean isSuchRequest(StockRequest request, List<StockRequest> requests) {
         return requests.contains(request);
+    }
+
+//    Check the entered parameters of request
+    public static void areRequestParametersCorrect(String[] param) throws WrongStockRequestException{
+        if (param.length < 5
+                || param[0] == null
+                || param[0].equals("")
+                || (!param[1].equals("s") && !param[1].equals("b"))
+                || !List.of(StockNames.values()).contains(StockNames.valueOf(param[2]))) {
+            throw new WrongStockRequestException();
+        }
     }
 }

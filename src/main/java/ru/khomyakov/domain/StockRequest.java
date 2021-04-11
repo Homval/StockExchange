@@ -33,6 +33,10 @@ public class StockRequest {
         return stockAmount;
     }
 
+    public String getStockAction() {
+        return stockAction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,4 +49,6 @@ public class StockRequest {
     public int hashCode() {
         return Objects.hash(stockName, stockPrice, stockAmount);
     }
+
+
 }

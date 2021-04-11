@@ -15,13 +15,12 @@ public class InOutService {
                 .forEach(line -> {
                     String[] client = line.split("\t");
 //                    check the entered data for ClientAccount
-                    try{
-                        if (client.length < 5 || client[0] == null || client[0].equals("")) {
-                            throw new WrongClientAccountException();
-                        }
+                    try {
+                        areParametersCorrect(client);
                     } catch (WrongClientAccountException e) {
                         e.printStackTrace();
                     }
+
                     clientAccountDataBase.put(client[0], new ClientAccount(client[0],
                             Integer.parseInt(client[1]),
                             Integer.parseInt(client[2]),
@@ -42,7 +41,12 @@ public class InOutService {
                 writer.append('\n');
                 writer.flush();
             }
+        }
+    }
 
+    public static void areParametersCorrect(String[] param) throws WrongClientAccountException{
+        if (param.length < 6 || param[0] == null || param[0].equals("")) {
+            throw new WrongClientAccountException();
         }
     }
 }
