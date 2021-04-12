@@ -46,7 +46,8 @@ public class OrderRequestsService {
                     addToListOrExecuteRequest(sellersRequests, buyersRequests, stockRequest, App.clients);
                     break;
             }
-        }    }
+        }
+    }
 
 //        If request not exist yet add it in appropriate list. In other case make transaction
     public static void addToListOrExecuteRequest(List<StockRequest> sameTypeRequests, List<StockRequest> otherTypeRequests, StockRequest stockRequest, Map<String, ClientAccount> clients) {

@@ -10,10 +10,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * Hello world!
- *
- */
 public class App {
 
     public static Map<String, ClientAccount> clients;
