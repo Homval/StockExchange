@@ -9,10 +9,9 @@ import ru.khomyakov.exceptions.WrongStockRequestException;
 import ru.khomyakov.services.OrderRequestsService;
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class OrderRequestServiceTest {
     String[] params;
@@ -20,6 +19,10 @@ public class OrderRequestServiceTest {
     @Before
     public void init() {
         params = new String[] {"A", "b", "A", "10", "10"};
+        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
+        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
+        App.clients.put(seller.getClientName(), seller);
+        App.clients.put(buyer.getClientName(), buyer);
     }
 
     @Test
@@ -113,13 +116,9 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         sellersList.add(sellerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest);
 
         assertEquals(0, sellersList.size());
 
@@ -132,13 +131,8 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         sellersList.add(sellerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest);
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 
@@ -151,13 +145,8 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         buyersList.add(buyerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(sellersList, buyersList, sellerRequest, clients);
+        OrderRequestsService.addToListOrExecuteRequest(sellersList, buyersList, sellerRequest);
 
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
@@ -171,13 +160,8 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         sellersList.add(sellerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest);
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 
@@ -190,13 +174,8 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         sellersList.add(sellerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest);
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 
@@ -209,13 +188,8 @@ public class OrderRequestServiceTest {
         List<StockRequest> buyersList = new LinkedList<>();
         List<StockRequest> sellersList = new LinkedList<>();
         sellersList.add(sellerRequest);
-        Map<String, ClientAccount> clients = new HashMap<>();
-        ClientAccount buyer = new ClientAccount("A", 1000, 1000, 1000, 1000, 1000);
-        ClientAccount seller = new ClientAccount("B", 100, 100, 100, 100, 100);
-        clients.put(seller.getClientName(), seller);
-        clients.put(buyer.getClientName(), buyer);
 
-        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest, clients);
+        OrderRequestsService.addToListOrExecuteRequest(buyersList, sellersList, buyerRequest);
 
         assertTrue(sellersList.size() == 1 && buyersList.size() == 1);
 

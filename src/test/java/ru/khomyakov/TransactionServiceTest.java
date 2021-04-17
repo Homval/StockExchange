@@ -8,47 +8,37 @@ import ru.khomyakov.domain.StockRequest;
 import ru.khomyakov.services.TransactionService;
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class TransactionServiceTest {
-    String sellerName;
-    String buyerName;
-    StockRequest request;
-    Map<String, ClientAccount> clients;
+    StockRequest sellerRequest;
+    StockRequest buyerRequest;
 
     @Before
     public void init() {
-        sellerName = "A";
-        buyerName = "B";
-        request = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
-        clients = new HashMap<>();
+        sellerRequest = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
+        buyerRequest = new StockRequest("B", "b", StockNames.valueOf("A"), 10, 10);
         ClientAccount buyer = new ClientAccount("B", 0, 0, 0, 0, 0);
         ClientAccount seller = new ClientAccount("A", 0, 0, 0, 0, 0);
-        clients.put(sellerName, seller);
-        clients.put(buyerName, buyer);
+        App.clients.put(sellerRequest.getClientName(), seller);
+        App.clients.put(buyerRequest.getClientName(), buyer);
     }
 
     @Test
     public void check_correct_transaction_for_seller() {
-        TransactionService.executeTransaction(sellerName, buyerName, request, clients);
+        TransactionService.executeTransaction(sellerRequest, buyerRequest);
 
-        ClientAccount account1 = clients.get(sellerName);
+        ClientAccount sellerResult = new ClientAccount(sellerRequest.getClientName(), 100, -10, 0, 0, 0);
 
-        ClientAccount sellerResult = new ClientAccount("A", 100, -10, 0, 0, 0);
-
-        assertEquals(account1, sellerResult);
+        assertEquals(App.clients.get(sellerRequest.getClientName()), sellerResult);
     }
 
     @Test
     public void check_correct_transaction_for_buyer() {
-        TransactionService.executeTransaction(sellerName, buyerName, request, clients);
+        TransactionService.executeTransaction(sellerRequest, buyerRequest);
 
-        ClientAccount account2 = clients.get(buyerName);
+        ClientAccount buyerResult = new ClientAccount(buyerRequest.getClientName(), -100, 10, 0, 0, 0);
 
-        ClientAccount buyerResult = new ClientAccount("B", -100, 10, 0, 0, 0);
-
-        assertEquals(account2, buyerResult);
+        assertEquals(App.clients.get(buyerRequest.getClientName()), buyerResult);
     }
 
 }
